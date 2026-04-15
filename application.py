@@ -13,8 +13,8 @@ scaler_model = pickle.load(open('models/scaler.pkl', 'rb'))
 
 @app.route("/")
 def index():
-    # This will now automatically jump to /predictdata
-    return redirect(url_for('predict_datapoint'))
+    # This renders the form as soon as the site opens
+    return render_template('home.html')
 
 @app.route('/predictdata', methods=['GET', 'POST'])
 def predict_datapoint():
