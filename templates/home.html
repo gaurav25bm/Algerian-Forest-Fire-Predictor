@@ -4,8 +4,8 @@
     <title>Algerian Forest Fire Predictor</title>
     <style>
         body { 
-            font-family: Arial, sans-serif; 
-            /* Added Forest Background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            /* Forest Background Image */
             background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
@@ -17,20 +17,54 @@
             margin: 0; 
         }
         .login { 
-            background: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
-            padding: 30px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-            width: 400px; 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 40px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+            width: 450px; 
             text-align: center; 
         }
-        h1 { color: #333; margin-bottom: 20px; }
-        /* Step 2: Input styling for numbers */
-        input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; }
-        button.predict { width: 95%; padding: 12px; background-color: #ff4b2b; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 15px; }
-        button.predict:hover { background-color: #ff416c; }
-        button.reset { width: 95%; padding: 8px; background-color: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
-        h2 { margin-top: 20px; color: #2c3e50; }
+        h1 { color: #2d5a27; margin-bottom: 25px; font-weight: bold; }
+        input, select { 
+            width: 95%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            box-sizing: border-box; /* Ensures padding doesn't break width */
+        }
+        button.predict { 
+            width: 95%; 
+            padding: 15px; 
+            background-color: #e63946; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 18px; 
+            margin-top: 20px; 
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        button.predict:hover { background-color: #d62828; transform: scale(1.02); }
+        button.reset { 
+            width: 95%; 
+            padding: 10px; 
+            background-color: #6c757d; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin-top: 10px; 
+        }
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f1faee;
+            border-radius: 8px;
+            border: 2px solid #a8dadc;
+        }
+        h2 { color: #1d3557; margin: 0; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -38,22 +72,35 @@
         <h1>Forest Fire Predictor</h1>
         
         <form action="{{ url_for('predict_datapoint') }}" method="post">
-            <input type="number" step="0.01" name="Temperature" placeholder="Temperature" required />
-            <input type="number" step="0.01" name="RH" placeholder="Relative Humidity (RH)" required />
-            <input type="number" step="0.01" name="Ws" placeholder="Wind Speed (Ws)" required />
-            <input type="number" step="0.01" name="Rain" placeholder="Rain" required />
+            <input type="number" step="0.01" name="Temperature" placeholder="Temperature (°C)" required />
+            <input type="number" step="0.01" name="RH" placeholder="Relative Humidity (RH %)" required />
+            <input type="number" step="0.01" name="Ws" placeholder="Wind Speed (Ws km/h)" required />
+            <input type="number" step="0.01" name="Rain" placeholder="Rain (mm)" required />
             <input type="number" step="0.01" name="FFMC" placeholder="FFMC Index" required />
             <input type="number" step="0.01" name="DMC" placeholder="DMC Index" required />
             <input type="number" step="0.01" name="ISI" placeholder="ISI Index" required />
-            <input type="number" step="1" name="Classes" placeholder="Classes (0 or 1)" required />
-            <input type="number" step="1" name="Region" placeholder="Region (0 or 1)" required />
+
+            <select name="Classes" required>
+                <option value="" disabled selected>Select Class (Fire/No Fire)</option>
+                <option value="0">0 (No Fire)</option>
+                <option value="1">1 (Fire)</option>
+            </select>
+
+            <select name="Region" required>
+                <option value="" disabled selected>Select Region</option>
+                <option value="0">0 (Bejaia)</option>
+                <option value="1">1 (Sidi Bel-abbes)</option>
+            </select>
 
             <button type="submit" class="predict">Predict Fire Weather Index</button>
             <button type="reset" class="reset">Clear Inputs</button>
         </form>
 
         {% if results %}
-        <h2>THE FWI prediction is: {{results}}</h2>
+        <div class="result-box">
+            <h2>THE FWI prediction is:</h2>
+            <p style="font-size: 24px; font-weight: bold; color: #e63946; margin-top: 10px;">{{results}}</p>
+        </div>
         {% endif %}
     </div>
 </body>
